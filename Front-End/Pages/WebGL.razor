@@ -1,5 +1,18 @@
 @page "/webgl"
+@inject IJSRuntime JSRuntime;
 
 <p>
-    TODO - webgl page
+    @another
+    <canvas bind="@test" id="bob"></canvas>
 </p>
+
+@code {
+    private dynamic test = null;
+    private int another = 6;
+
+    protected override async Task OnInitializedAsync()
+    {
+        string y = await JSRuntime.InvokeAsync<string>("makeCanvasBlack", test);
+        StateHasChanged();
+    }
+}
