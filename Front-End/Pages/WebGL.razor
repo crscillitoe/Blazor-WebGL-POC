@@ -1,18 +1,23 @@
 @page "/webgl"
-@inject IJSRuntime JSRuntime;
 
 <p>
-    @another
-    <canvas bind="@test" id="bob"></canvas>
+	@test
 </p>
 
-@code {
-    private dynamic test = null;
-    private int another = 6;
+<BECanvas Width="300" Height="400" @ref="canvasReference"></BECanvas>
 
-    protected override async Task OnInitializedAsync()
-    {
-        string y = await JSRuntime.InvokeAsync<string>("makeCanvasBlack", test);
-        StateHasChanged();
-    }
+@code {
+	private int test = 5;
+
+	private WebGLContext context;
+	protected BECanvasComponent canvasReference;
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		Console.WriteLine("Initialized");
+		this.context = await this.canvasReference.CreateWebGLAsync();
+
+		await this.context.ClearColorAsync(0, 0, 0, 1);
+		await this.context.ClearAsync(BufferBits.COLOR_BUFFER_BIT);
+	}
 }
